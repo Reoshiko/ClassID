@@ -22,7 +22,7 @@ class SchoolClassService:
         session.add(obj)
         await session.commit()
         await session.refresh(obj)
-        return obj
+        return SchoolClassResponse.model_validate(obj)
 
     async def get_all(self, session: AsyncSession) -> List[SchoolClassResponse]:
         res = await session.execute(select(SchoolClass).order_by(SchoolClass.id))
