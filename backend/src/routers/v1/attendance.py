@@ -22,10 +22,11 @@ async def scan(
     data = await file.read()
     token = scanner.decode(data)
     student = await student_service.get_by_qr_token(token=token, session=session)
+    payload = AttendanceCreate(
+        student_id=student.id, event_type=event_type, source=AttendanceSource.SCANNER
+    )
     return await attendance_service.create(
-        student_id=student.id,
-        event_type=event_type,
-        source=AttendanceSource.SCANNER,
+        payload,
         session=session,
     )
 
