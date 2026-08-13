@@ -3,7 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from src.models.dto.student import StudentCreate, StudentResponse
 from src.models.schemas import Student
+from src.dependencies import get_qrservice
 from typing import List
+
+qr_service = get_qrservice()
 
 
 class StudentService:
@@ -33,6 +36,8 @@ class StudentService:
         obj = await self._get_obj_by_id(id=id, session=session)
         return StudentResponse.model_validate(obj)
 
-    async def get_qr_token(self, id: int, session: AsyncSession):
+    async def get_qr(self, id: int, session: AsyncSession):
         obj = await self._get_obj_by_id(id=id, session=session)
-        return obj.qr_token
+        token = obj.qr_token
+        qr = qr_service.generate(token)
+        return qr
