@@ -6,6 +6,13 @@ from typing import List
 
 
 class SchoolClassService:
+    async def _get_obj_by_id(self, id: int, session: AsyncSession) -> SchoolClass:
+        res = await session.execute(select(SchoolClass).where(SchoolClass.id == id))
+        obj = res.scalar_one_or_none()
+        if obj is None:
+            return ValueError("Class not found")
+        return obj
+
     async def create(
         self, payload: SchoolClassCreate, session: AsyncSession
     ) -> SchoolClassResponse:
@@ -20,3 +27,7 @@ class SchoolClassService:
         res = await session.execute(select(SchoolClass).order_by(SchoolClass.id))
         objs = res.scalars().all()
         return [SchoolClassResponse.model_validate(obj) for obj in objs]
+
+    async def retrieve(self, id: int, session: AsyncSession) -> SchoolClassResponse:
+        obj = await self._get_obj_by_id(id=id, session=session)
+        return SchoolClassResponse.model_validate(obj)
