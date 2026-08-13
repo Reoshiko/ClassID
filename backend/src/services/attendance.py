@@ -29,3 +29,17 @@ class AttendanceService:
         )
         objs = res.scalars().all()
         return [AttendanceResponse.model_validate(obj) for obj in objs]
+
+    async def get_last_school_event(self, student_id: int, session: AsyncSession):
+        res = await session.execute(
+            select(Student)
+            .where(
+                Student.id == student_id,
+                AttendanceEvent.event_type.in_(
+                    AttendanceEventType.SCHOOL_ENTER, AttendanceEventType.SCHOOL_EXIT
+                ),
+            )
+            .order_by(AttendanceEvent.created_at.desc())
+            .limit(1)
+        )
+        return res.scalar_one_or_none()
