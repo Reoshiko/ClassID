@@ -4,7 +4,7 @@ from src.models.dto.schoolclass import SchoolClassResponse, SchoolClassCreate
 from src.core.database import get_session
 from src.dependencies import get_schoolclassservice
 
-router = APIRouter(prefix="/classes", tags=["classes"])
+router = APIRouter()
 
 
 @router.post("/", response_model=SchoolClassResponse)

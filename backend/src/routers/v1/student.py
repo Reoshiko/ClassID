@@ -4,7 +4,7 @@ from src.models.dto.student import StudentCreate, StudentResponse
 from src.core.database import get_session
 from src.dependencies import get_studentservice
 
-router = APIRouter(prefix="/students", tags=["students"])
+router = APIRouter()
 
 
 @router.post("/", response_model=StudentResponse)
