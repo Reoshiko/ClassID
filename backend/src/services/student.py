@@ -41,3 +41,14 @@ class StudentService:
         token = obj.qr_token
         qr = qr_service.generate(token)
         return qr
+
+    async def get_by_qr_token(
+        self, token: str, session: AsyncSession
+    ) -> StudentResponse:
+        res = await session.execute(select(Student).where(Student.qr_token == token))
+        obj = res.scalar_one_or_none()
+
+        if obj is None:
+            raise HTTPException(status_code=404, detail="student not found")
+
+        return StudentResponse.model_validate(obj)
