@@ -3,10 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from src.models.dto.student import StudentCreate, StudentResponse
 from src.models.schemas import Student
-from src.dependencies import get_qrservice
 from typing import List
+from .qr import QRService
 
-qr_service = get_qrservice()
+qr_service = QRService()
 
 
 class StudentService:
