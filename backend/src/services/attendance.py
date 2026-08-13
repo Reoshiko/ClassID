@@ -30,7 +30,7 @@ class AttendanceService:
         objs = res.scalars().all()
         return [AttendanceResponse.model_validate(obj) for obj in objs]
 
-    async def get_last_school_event(self, student_id: int, session: AsyncSession):
+    async def get_last_school_event(self, student_id: int, session: AsyncSession) -> AttendanceEvent | None:
         res = await session.execute(
             select(Student)
             .where(
