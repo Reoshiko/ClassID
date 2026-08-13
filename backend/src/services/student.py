@@ -6,13 +6,11 @@ from typing import List
 
 
 class StudentService:
-    async def _get_obj_by_id(
-        self, id: int, session: AsyncSession
-    ) -> StudentResponse | None:
+    async def _get_obj_by_id(self, id: int, session: AsyncSession) -> Student:
         res = await session.execute(select(Student).where(Student.id == id))
         obj = res.scalar_one_or_none()
-        if not obj:
-            return ValueError({"detail": "not found"})
+        if obj is None:
+            return ValueError("Student not found")
         return obj
 
     async def create(
@@ -30,5 +28,6 @@ class StudentService:
         objs = res.scalars().all()
         return [StudentResponse.model_validate(obj) for obj in objs]
 
-    async def retrieve(self, id: int, session: AsyncSession) -> StudentResponse | None:
-        return self._get_obj_by_id(id=id, session=session)
+    async def retrieve(self, id: int, session: AsyncSession) -> StudentResponse:
+        obj = await self._get_obj_by_id(id=id, session=session)
+        return StudentResponse.model_validate(obj)
