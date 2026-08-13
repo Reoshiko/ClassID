@@ -1,3 +1,4 @@
+from fastapi.exceptions import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from src.models.dto.schoolclass import SchoolClassCreate, SchoolClassResponse
@@ -10,7 +11,7 @@ class SchoolClassService:
         res = await session.execute(select(SchoolClass).where(SchoolClass.id == id))
         obj = res.scalar_one_or_none()
         if obj is None:
-            return ValueError("Class not found")
+            raise HTTPException(status_code=404, detail="class not found")
         return obj
 
     async def create(

@@ -1,3 +1,4 @@
+from fastapi.exceptions import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from src.models.dto.student import StudentCreate, StudentResponse
@@ -10,7 +11,7 @@ class StudentService:
         res = await session.execute(select(Student).where(Student.id == id))
         obj = res.scalar_one_or_none()
         if obj is None:
-            return ValueError("Student not found")
+            raise HTTPException(status_code=404, detail="student not found")
         return obj
 
     async def create(
