@@ -3,4 +3,14 @@ name = "backend"
 version = "0.1.0"
 description = "ClassID backend"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "alembic>=1.19.1",
+    "fastapi>=0.141.1",
+    "opencv-python>=5.0.0.93",
+    "pillow>=12.3.0",
+    "psycopg2-binary>=2.9.12",
+    "pydantic-settings>=2.15.0",
+    "qrcode>=8.2",
+    "sqlalchemy>=2.0.52",
+    "uvicorn>=0.52.2",
+]
