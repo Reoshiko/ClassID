@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.models.dto.student import StudentCreate, StudentResponse
 from src.core.database import get_session
@@ -30,3 +31,13 @@ async def retrieve(
     repo=Depends(get_studentservice),
 ):
     return await repo.retrieve(id=id, session=session)
+
+
+@router.post("/{id}/qr", response_model=None)
+async def get_qr(
+    id: int,
+    session: AsyncSession = Depends(get_session),
+    repo=Depends(get_studentservice),
+):
+    qr_data = await repo.get_qr(id=id, session=session)
+    return StreamingResponse(qr_data, media_type="image/png")
