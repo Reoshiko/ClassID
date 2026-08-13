@@ -30,7 +30,9 @@ class AttendanceService:
         objs = res.scalars().all()
         return [AttendanceResponse.model_validate(obj) for obj in objs]
 
-    async def get_last_school_event(self, student_id: int, session: AsyncSession) -> AttendanceEvent | None:
+    async def get_last_school_event(
+        self, student_id: int, session: AsyncSession
+    ) -> AttendanceEvent | None:
         res = await session.execute(
             select(Student)
             .where(
@@ -43,3 +45,28 @@ class AttendanceService:
             .limit(1)
         )
         return res.scalar_one_or_none()
+
+    async def create_school_event(
+        self, student_id: int, session: AsyncSession
+    ) -> AttendanceResponse:
+        obj = await session.scalar(select(Student).where(Student.id == student_id))
+        if obj is None:
+            raise HTTPException(status_code=404, detail="student not found")
+        last_event = await self.get_last_school_event(
+            student_id=student_id, session=session
+        )
+        if (
+            last_event is None
+            or last_event.event_type == AttendanceEventType.SCHOOL_EXIT
+        ):
+            event_type = AttendanceEventType.SCHOOL_ENTER
+        else:
+            event_type = AttendanceEventType.SCHOOL_EXIT
+
+        payload = AttendanceCreate(
+            student_id=student_id,
+            event_type=event_type,
+            source=AttendanceSource.SCANNER,
+        )
+
+        return await self.create(payload=payload, session=session)
