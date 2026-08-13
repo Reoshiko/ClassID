@@ -32,3 +32,7 @@ class StudentService:
     async def retrieve(self, id: int, session: AsyncSession) -> StudentResponse:
         obj = await self._get_obj_by_id(id=id, session=session)
         return StudentResponse.model_validate(obj)
+
+    async def get_qr_token(self, id: int, session: AsyncSession):
+        obj = await self._get_obj_by_id(id=id, session=session)
+        return obj.qr_token
