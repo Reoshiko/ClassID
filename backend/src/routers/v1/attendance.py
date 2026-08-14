@@ -36,3 +36,19 @@ async def get_all(
     session: AsyncSession = Depends(get_session), repo=Depends(get_attendanceservice)
 ):
     return await repo.get_all(session=session)
+
+
+@router.post("/school/scan", response_model=AttendanceResponse)
+async def school_scan(
+    file: UploadFile,
+    session: AsyncSession = Depends(get_session),
+    student_service=Depends(get_studentservice),
+    attendance_service=Depends(get_attendanceservice),
+):
+    data = await file.read()
+    token = scanner.decode(data)
+    student = await student_service.get_by_qr_token(token=token, session=session)
+    return await attendance_service.create_school_event(
+        student_id=student.id,
+        session=session,
+    )
