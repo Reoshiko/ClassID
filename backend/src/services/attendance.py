@@ -75,3 +75,14 @@ class AttendanceService:
         )
 
         return await self.create(payload=payload, session=session)
+
+    async def get_by_student(
+        self, student_id: int, session: AsyncSession
+    ) -> List[AttendanceResponse]:
+        res = await session.execute(
+            select(AttendanceEvent)
+            .where(AttendanceEvent.student_id == student_id)
+            .order_by(AttendanceEvent.created_at.desc())
+        )
+        objs = res.scalars().all()
+        return [AttendanceResponse.model_validate(obj) for obj in objs]
