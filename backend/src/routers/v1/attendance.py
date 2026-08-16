@@ -52,3 +52,12 @@ async def school_scan(
         student_id=student.id,
         session=session,
     )
+
+
+@router.get("/students/{student_id}", response_model=list[AttendanceResponse])
+async def get_by_student(
+    student_id: int,
+    session: AsyncSession = Depends(get_session),
+    repo=Depends(get_attendanceservice),
+):
+    return await repo.get_by_student(student_id=student_id, session=session)
