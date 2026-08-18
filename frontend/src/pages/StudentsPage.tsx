@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { api } from "../api";
+import { getApiUrl } from "../config";
 import type { Student } from "../types";
 
 
@@ -60,7 +61,7 @@ export function StudentsPage() {
                         {" — "}
                         class #{student.class_id}
                     </p>
-                    <a href={`${import.meta.env.VITE_API_URL}/students/${student.id}/qr`} target="_blank">QR</a>
+                    <a href={`${getApiUrl()}/students/${student.id}/qr`} target="_blank">QR</a>
                 </div>
             ))}
         </div>

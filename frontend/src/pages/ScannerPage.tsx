@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { AttendanceEvent, Student } from "../types";
 import { api } from "../api";
+import { getApiUrl } from "../config";
 
 export function ScannerPage() {
     const [file, setFile] = useState<File | null>(null)
@@ -18,7 +19,7 @@ export function ScannerPage() {
         try {
             setError("")
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/attendance/school/scan`,
+                `${getApiUrl()}/attendance/school/scan`,
                 {
                     method: "POST",
                     body: form
