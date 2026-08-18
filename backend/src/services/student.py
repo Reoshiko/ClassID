@@ -2,7 +2,7 @@ from fastapi.exceptions import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from src.models.dto.student import StudentCreate, StudentResponse
-from src.models.schemas import Student
+from src.models.schemas import Student, SchoolClass
 from typing import List
 from .qr import QRService
 
@@ -20,6 +20,11 @@ class StudentService:
     async def create(
         self, payload: StudentCreate, session: AsyncSession
     ) -> StudentResponse:
+        schoolClass = await session.scalar(
+            select(SchoolClass).where(SchoolClass.id == payload.class_id)
+        )
+        if SchoolClass is None:
+            raise HTTPException(status_code=404, detail="class not found")
         data = payload.model_dump()
         obj = Student(**data)
         session.add(obj)
