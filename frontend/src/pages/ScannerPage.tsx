@@ -1,9 +1,11 @@
 import { useState } from "react";
-import type { AttendanceEvent } from "../types";
+import type { AttendanceEvent, Student } from "../types";
+import { api } from "../api";
 
 export function ScannerPage() {
-    const [file, setFile] = useState<File| null>(null)
+    const [file, setFile] = useState<File | null>(null)
     const [result, setResult] = useState<AttendanceEvent | null>(null)
+    const [student, setStudent] = useState<Student | null>(null)
     const [error, setError] = useState("")
 
     async function scan() {
@@ -15,17 +17,22 @@ export function ScannerPage() {
     
         try {
             setError("")
-    
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/attendance/school/scan`, {
-                method: "POST",
-                body: form
-            })
-
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/attendance/school/scan`,
+                {
+                    method: "POST",
+                    body: form
+                }
+            )
             const data = await response.json()
             if (!response.ok) {
                 throw new Error(data.detail)
             }
             setResult(data)
+            const studentData = await api<Student>(
+                `/students/${data.student_id}`
+            )
+            setStudent(studentData)
         } catch(error) {
             if (error instanceof Error) {
                 setError(error.message)
@@ -41,9 +48,9 @@ export function ScannerPage() {
             {error && (
                 <p>{error}</p>
             )}
-            {result && (
+            {result && student && (
                 <div>
-                    <p>Student: {result.student_id}</p>
+                    <p>Student: {student.first_name} {student.last_name}</p>
                     <p>Event: {result.event_type}</p>
                     <p>Source: {result.source}</p>
                 </div>
