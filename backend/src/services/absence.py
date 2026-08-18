@@ -27,7 +27,7 @@ class AbsenceService:
         res = await session.execute(
             select(AbsenceRequest).order_by(AbsenceRequest.id.desc())
         )
-        objs = await res.scalars().all()
+        objs = res.scalars().all()
         return [AbsenceResponse.model_validate(obj) for obj in objs]
 
     async def set_status(
