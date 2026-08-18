@@ -1,65 +1,78 @@
-import { useState } from "react";
-import type { AttendanceEvent, Student } from "../types";
+import { useEffect, useState } from "react";
 import { api } from "../api";
+import type { AttendanceEvent, SchoolClass, Student } from "../types";
 
-export function ScannerPage() {
-    const [file, setFile] = useState<File | null>(null)
-    const [result, setResult] = useState<AttendanceEvent | null>(null)
-    const [student, setStudent] = useState<Student | null>(null)
-    const [error, setError] = useState("")
+export function AttendancePage() {
+    const [events, setEvents] = useState<AttendanceEvent[]>([])
+    const [classes, setClasses] = useState<SchoolClass[]>([])
+    const [students, setStudents] = useState<Student[]>([])
+    const [classId, setClassId] = useState("")
 
-    async function scan() {
-        if (!file) {
+    useEffect(() => {
+        api<SchoolClass[]>("/classes/").then(setClasses)
+        api<Student[]>("/students/").then(setStudents)
+    }, [])
+
+    async function loadAttendance() {
+        if (!classId) {
             return
         }
-        const form = new FormData()
-        form.append("file", file)
-        try {
-            setError("")
-            const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/attendance/school/scan`,
-                {
-                    method: "POST",
-                    body: form
-                }
-            )
-            const data = await response.json()
-            if (!response.ok) {
-                throw new Error(data.detail)
-            }
-            setResult(data)
-            const studentData = await api<Student>(
-                `/students/${data.student_id}`
-            )
-            setStudent(studentData)
-        } catch(error) {
-            if (error instanceof Error) {
-                setError(error.message)
-            }
-        }
+
+        const data = await api<AttendanceEvent[]>(
+            `/attendance/class/${classId}`
+        )
+
+        setEvents(data)
+    }
+
+    function getStudent(studentId: number) {
+        return students.find((student) => student.id === studentId)
     }
 
     return (
         <div>
-            <h1>QR Scanner</h1>
-            <input
-                type="file"
-                accept="image/*"
-                onChange={(event) => {
-                    setFile(event.target.files?.[0] ?? null)
-                }}
-            />
-            <button onClick={scan}>Scan</button>
-            {error && (
-                <p>{error}</p>
-            )}
-            {result && student && (
-                <div>
-                    <p>Student: {student.first_name} {student.last_name}</p>
-                    <p>Event: {result.event_type}</p>
-                    <p>Source: {result.source}</p>
-                </div>
-            )}
+            <h1>Attendance</h1>
+
+            <select
+                value={classId}
+                onChange={(event) => setClassId(event.target.value)}
+            >
+                <option value="">Select class</option>
+
+                {classes.map((schoolClass) => (
+                    <option
+                        key={schoolClass.id}
+                        value={schoolClass.id}
+                    >
+                        {schoolClass.name}
+                    </option>
+                ))}
+            </select>
+
+            <button onClick={loadAttendance}>Load</button>
+
+            <hr />
+
+            {events.map((event) => {
+                const student = getStudent(event.student_id)
+
+                return (
+                    <div key={event.id}>
+                        <p>
+                            {student
+                                ? `${student.first_name} ${student.last_name}`
+                                : `Student #${event.student_id}`
+                            }
+                            {" | "}
+                            {event.event_type}
+                            {" | "}
+                            {event.source}
+                            {" | "}
+                            {new Date(event.created_at).toLocaleString()}
+                        </p>
+                    </div>
+                )
+            })}
         </div>
     )
 }
