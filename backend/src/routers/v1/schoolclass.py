@@ -7,7 +7,7 @@ from src.dependencies import get_schoolclassservice
 router = APIRouter()
 
 
-@router.post("/", response_model=SchoolClassResponse)
+@router.post("/", response_model=SchoolClassResponse, status_code=201)
 async def create(
     payload: SchoolClassCreate,
     session: AsyncSession = Depends(get_session),

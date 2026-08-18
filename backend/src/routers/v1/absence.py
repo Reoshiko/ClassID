@@ -8,7 +8,7 @@ from src.dependencies import get_absenceservice
 router = APIRouter()
 
 
-@router.post("/", response_model=AbsenceResponse)
+@router.post("/", response_model=AbsenceResponse, status_code=201)
 async def create(
     payload: AbsenceCreate,
     session: AsyncSession = Depends(get_session),

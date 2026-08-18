@@ -11,7 +11,7 @@ router = APIRouter()
 scanner = QRScannerService()
 
 
-@router.post("/scan", response_model=AttendanceResponse)
+@router.post("/scan", response_model=AttendanceResponse, status_code=201)
 async def scan(
     file: UploadFile,
     event_type: AttendanceEventType,
@@ -38,7 +38,7 @@ async def get_all(
     return await repo.get_all(session=session)
 
 
-@router.post("/school/scan", response_model=AttendanceResponse)
+@router.post("/school/scan", response_model=AttendanceResponse, status_code=201)
 async def school_scan(
     file: UploadFile,
     session: AsyncSession = Depends(get_session),
