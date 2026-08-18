@@ -3,6 +3,7 @@ import { Layout } from "./components/Layout";
 import { StudentsPage } from "./pages/StudentsPage";
 import { ClassesPage } from "./pages/ClassPage";
 import { AttendancePage } from "./pages/AttendancePage";
+import { ScannerPage } from "./pages/ScannerPage";
 
 
 export function App() {
@@ -14,6 +15,7 @@ export function App() {
               <Route path="/students" element={<StudentsPage />}/>
               <Route path="/classes" element={<ClassesPage />}/>
               <Route path="/attendance" element={<AttendancePage />}/>
+              <Route path="/scanner" element={<ScannerPage />}/>
             </Route>
           </Routes>
         </BrowserRouter>
