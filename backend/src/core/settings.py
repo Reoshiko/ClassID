@@ -1,5 +1,7 @@
+from typing import Annotated
+
 from pydantic import field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -8,7 +10,7 @@ class Settings(BaseSettings):
     )
     DB_URL: str = "sqlite+aiosqlite:///./class.db"
     DB_ECHO: bool = False
-    ALLOWED_HOSTS: list[str] = [
+    ALLOWED_HOSTS: Annotated[list[str], NoDecode] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
     ]
