@@ -1,6 +1,6 @@
 from fastapi.exceptions import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, func
 from src.models.dto.attendance import AttendanceCreate, AttendanceResponse
 from src.models.schemas import AttendanceEvent, Student
 from src.models.schemas.attendance import AttendanceEventType, AttendanceSource
@@ -86,3 +86,17 @@ class AttendanceService:
         )
         objs = res.scalars().all()
         return [AttendanceResponse.model_validate(obj) for obj in objs]
+
+    async def get_class_attendance(
+        self, class_id: int, session: AsyncSession
+    ) -> List[AttendanceResponse]:
+        res = await session.execute(
+            select(AttendanceEvent)
+            .join(Student, AttendanceEvent.student_id == Student.id)
+            .where(
+                Student.class_id == class_id,
+                func.date(AttendanceEvent.created_at.desc()),
+            )
+        )
+        objs = res.scalars().all()
+        return (AttendanceResponse.model_validate(obj) for obj in objs)
