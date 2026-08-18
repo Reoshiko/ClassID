@@ -23,4 +23,4 @@ class AbsenceRequest(Base):
     status: Mapped[AbsenceStatus] = mapped_column(
         SQLEnum(AbsenceStatus), nullable=False, default=AbsenceStatus.PENDING
     )
-    student: Mapped["student"] = relationship()
+    student: Mapped["Student"] = relationship()
