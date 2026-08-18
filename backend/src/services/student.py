@@ -23,7 +23,7 @@ class StudentService:
         schoolClass = await session.scalar(
             select(SchoolClass).where(SchoolClass.id == payload.class_id)
         )
-        if SchoolClass is None:
+        if schoolClass is None:
             raise HTTPException(status_code=404, detail="class not found")
         data = payload.model_dump()
         obj = Student(**data)
