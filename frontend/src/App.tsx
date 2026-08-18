@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { StudentsPage } from "./pages/StudentsPage";
 import { ClassesPage } from "./pages/ClassPage";
+import { AttendancePage } from "./pages/AttendancePage";
 
 
 export function App() {
@@ -12,6 +13,7 @@ export function App() {
               <Route path="/" element={<Navigate to="/students" replace />}/>
               <Route path="/students" element={<StudentsPage />}/>
               <Route path="/classes" element={<ClassesPage />}/>
+              <Route path="/attendance" element={<AttendancePage />}/>
             </Route>
           </Routes>
         </BrowserRouter>
