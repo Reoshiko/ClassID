@@ -5,6 +5,7 @@ from src.models.dto.attendance import AttendanceCreate, AttendanceResponse
 from src.models.schemas import AttendanceEvent, Student
 from src.models.schemas.attendance import AttendanceEventType, AttendanceSource
 from typing import List
+from datetime import date
 
 
 class AttendanceService:
@@ -95,8 +96,9 @@ class AttendanceService:
             .join(Student, AttendanceEvent.student_id == Student.id)
             .where(
                 Student.class_id == class_id,
-                func.date(AttendanceEvent.created_at.desc()),
+                func.date(AttendanceEvent.created_at) == date.today(),
             )
+            .order_by(AttendanceEvent.created_at.desc())
         )
         objs = res.scalars().all()
-        return (AttendanceResponse.model_validate(obj) for obj in objs)
+        return [AttendanceResponse.model_validate(obj) for obj in objs]
