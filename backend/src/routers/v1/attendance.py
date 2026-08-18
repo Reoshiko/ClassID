@@ -61,3 +61,12 @@ async def get_by_student(
     repo=Depends(get_attendanceservice),
 ):
     return await repo.get_by_student(student_id=student_id, session=session)
+
+
+@router.get("/class/{class_id}", response_model=list[AttendanceResponse])
+async def get_class_attendance(
+    class_id,
+    session: AsyncSession = Depends(get_session),
+    repo=Depends(get_attendanceservice),
+):
+    return await repo.get_class_attendance(class_id=class_id, session=session)
