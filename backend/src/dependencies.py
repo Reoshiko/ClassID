@@ -1,6 +1,7 @@
 from src.services.schoolclass import SchoolClassService
 from src.services.student import StudentService
 from src.services.attendance import AttendanceService
+from src.services.absence import AbsenceService
 
 
 def get_schoolclassservice():
@@ -13,3 +14,7 @@ def get_studentservice():
 
 def get_attendanceservice():
     return AttendanceService()
+
+
+def get_absenceservice():
+    return AbsenceService()
