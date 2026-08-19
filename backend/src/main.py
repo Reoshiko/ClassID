@@ -3,7 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.core.settings import settings
 from src.routers.v1 import api_router
 
-app = FastAPI(title="ClassID API", version="1.0.0")
+app = FastAPI(
+    title="ClassID API",
+    version="1.0.0",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
+)
 
 app.add_middleware(
     CORSMiddleware,
