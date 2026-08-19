@@ -1,0 +1,256 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #f4f3ef;
+    --surface: #fafaf8;
+    --text: #1a1814;
+    --text-muted: #6b6560;
+    --border: #ddd9d0;
+    --border-strong: #c8c2b8;
+    --accent: #2f4f4f;
+    --accent-hover: #243d3d;
+    --nav-active: #ebe8e1;
+    --radius: 6px;
+    --sidebar-width: 220px;
+    --font: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+}
+
+html {
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.5;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+/* — layout — */
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.logi {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0 0.5rem;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+}
+
+.logi svg {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.625rem;
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.933rem;
+    transition: color 0.15s, background 0.15s;
+}
+
+.nav-link:hover {
+    color: var(--text);
+    background: var(--nav-active);
+}
+
+.nav-link.active {
+    color: var(--text);
+    background: var(--nav-active);
+    font-weight: 500;
+}
+
+.content {
+    flex: 1;
+    padding: 2.5rem 3rem;
+    overflow-y: auto;
+}
+
+.content > div {
+    max-width: 640px;
+}
+
+/* — typography — */
+
+h1 {
+    margin: 0 0 1.75rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
+}
+
+h2 {
+    margin: 0 0 0.875rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+p {
+    margin: 0 0 0.5rem;
+}
+
+/* — forms — */
+
+input,
+select,
+button {
+    font: inherit;
+    color: inherit;
+}
+
+input,
+select {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    margin-bottom: 0.625rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--border-strong);
+}
+
+input[type="file"] {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+input[type="date"],
+input[type="number"] {
+    font-variant-numeric: tabular-nums;
+}
+
+button {
+    display: inline-block;
+    margin-top: 0.25rem;
+    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--accent);
+    color: #f5f4f0;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.933rem;
+    transition: background 0.15s;
+}
+
+button:hover {
+    background: var(--accent-hover);
+}
+
+button + button {
+    margin-left: 0;
+}
+
+/* — lists & dividers — */
+
+hr {
+    margin: 1.75rem 0;
+    border: none;
+    border-top: 1px solid var(--border);
+}
+
+.content > div > hr ~ div {
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.content > div > hr ~ div:last-child {
+    border-bottom: none;
+}
+
+/* nested hr inside list items (absence page) */
+.content > div > hr ~ div hr {
+    margin: 0.875rem 0;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* — responsive — */
+
+@media (max-width: 720px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .sidebar nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .nav-link span,
+    .nav-link {
+        font-size: 0.85rem;
+    }
+
+    .content {
+        padding: 1.5rem 1.25rem;
+    }
+}
