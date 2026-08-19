@@ -33,7 +33,7 @@ async def retrieve(
     return await repo.retrieve(id=id, session=session)
 
 
-@router.post("/{id}/qr", response_model=None)
+@router.get("/{id}/qr", response_model=None)
 async def get_qr(
     id: int,
     session: AsyncSession = Depends(get_session),
